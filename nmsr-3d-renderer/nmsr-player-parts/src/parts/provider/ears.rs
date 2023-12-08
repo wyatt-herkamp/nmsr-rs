@@ -468,7 +468,7 @@ impl EarsPlayerPartsProvider {
         features: &EarsFeatures,
         result: &mut Vec<EarsPlayerBodyPartDefinition>,
     ) {
-        let mut anchor = features.ear_anchor.unwrap_or_default();
+        let mut anchor = features.ear_anchor;
         let mut mode = features.ear_mode;
 
         // Upgrade the old ear mode to the new one
@@ -874,6 +874,9 @@ impl<M: ArmorMaterial> PartsProvider<M> for EarsPlayerPartsProvider {
         }
 
         if let Some(features) = context.ears_features {
+            let mut features = features;
+            features.claws &= !context.armor_slots.as_ref().is_some_and(|s| s.boots.is_some());
+            
             let is_slim_arms = context.model.is_slim_arms();
 
             let mut result = Vec::new();
